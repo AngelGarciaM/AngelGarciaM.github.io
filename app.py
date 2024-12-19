@@ -124,7 +124,10 @@ def abrir_correcion():
     # Obtener el directorio base
     basedir = os.path.abspath(os.path.dirname(__file__))
     
-    
+    tmp_dir = os.path.join(basedir, 'tmp')
+    if not os.path.exists(tmp_dir):
+        os.makedirs(tmp_dir)
+
    # Crear una lista de diccionarios de EvPDF
     evpdf_data = []
     for ev_pdf in lista_evpdf:  # Supón que lista_evpdf es tu lista de objetos EvPDF
@@ -133,13 +136,13 @@ def abrir_correcion():
             'texto': ev_pdf.texto,
             'nota': ev_pdf.nota
         })
-    temp_file_path =os.path.join(basedir, 'app', 'tmp', f'temp_data_{current_user.usuario}.json')
+    temp_file_path =os.path.join(tmp_dir,f'temp_data_{current_user.usuario}.json')
     # Guardar estos datos en un archivo temporal
     with open(temp_file_path, 'w', encoding='utf-8') as f:
         json.dump(evpdf_data, f)
     
     
-    resutados_path=os.path.join(basedir,'tmp', f'resultados_{current_user.usuario}.json')
+    resutados_path=os.path.join(tmp_dir,f'resultados_{current_user.usuario}.json')
     # Construir la ruta al script
     script_path = os.path.join(basedir, 'comparaciones_profesor.py')
 
@@ -222,7 +225,10 @@ def abrir_cuestionario():
 
     
     basedir = os.path.abspath(os.path.dirname(__file__))
-    temp_file_path = os.path.join(basedir,'tmp','temp_data_cuestionario_{current_user.usuario}.json')
+    tmp_dir = os.path.join(basedir, 'tmp')
+    if not os.path.exists(tmp_dir):
+        os.makedirs(tmp_dir)
+    temp_file_path = os.path.join(tmp_dir,'temp_data_cuestionario_{current_user.usuario}.json')
     
     # Guardar estos datos en un archivo temporal
     with open(temp_file_path, 'w', encoding='utf-8') as f:
@@ -234,7 +240,7 @@ def abrir_cuestionario():
     # Construir la ruta al script
     script_path = os.path.join(basedir, 'cuestionario.py')
     # Comando para ejecutar el script
-    resultados_path = os.path.join(basedir,'tmp', f'resultados_cuestionario_{current_user.usuario}.json')
+    resultados_path = os.path.join(tmp_dir, f'resultados_cuestionario_{current_user.usuario}.json')
     command = ['python', script_path, temp_file_path, resultados_path]  # Cambia esto a la ruta de tu script
     
     process=subprocess.Popen(command)
