@@ -220,6 +220,7 @@ def abrir_cuestionario():
         if num_corr!='':
             num_corr=int(num_corr)
             if num_corr>0:
+                lista_correctores=[]
                 for i in range(0,num_corr):
                     lista_correctores.append(f'Corrector {i+1}')
     
@@ -235,8 +236,8 @@ def abrir_cuestionario():
             
         with lock:
             g.db_manager.guardar_correccion(correccion)
-            socketio.emit('actualizar_pagina') #Mensaje que capturan los clientes y actualizan sus respectivas páginas
-            
+        
+        socketio.emit('actualizar_pagina') #Mensaje que capturan los clientes y actualizan sus respectivas páginas    
         return redirect(url_for('mostrarCorrecciones'))
         
 
