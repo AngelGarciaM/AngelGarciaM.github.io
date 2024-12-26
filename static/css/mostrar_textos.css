@@ -1,0 +1,53 @@
+/* Estilo general para el cuerpo de la página */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+/* Estilo del título */
+h1 {
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* Contenedor de los PDFs */
+.pdf-container {
+    display: flex;
+    justify-content: space-between;  /* Distribuye los elementos con espacio entre ellos */
+    margin: 20px;
+    height: 500px; /* Altura fija para los contenedores de los PDFs */
+}
+
+/* Estilo para cada cuadro de PDF */
+.pdf-box {
+    width: 48%; /* 48% del ancho de la pantalla */
+    background-color: #f0f0f0;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Estilo para el título dentro de cada PDF */
+.pdf-box h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+/* Contenedor del texto dentro del PDF */
+.pdf-text {
+    flex-grow: 1;
+    overflow-y: auto;  /* Permite el desplazamiento vertical si el contenido es demasiado largo */
+    padding-right: 10px;
+}
+
+/* Estilo para los párrafos de texto */
+.pdf-text p {
+    font-size: 14px;
+    line-height: 1.6;
+    text-align: justify;
+    margin: 0;
+}

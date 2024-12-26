@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Corrección</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .container { width: 50%; margin: 0 auto; padding: 20px; }
+        .form-group { margin-bottom: 15px; }
+        label { font-weight: bold; }
+        select, input[type="text"], input[type="number"] { width: 100%; padding: 8px; }
+        button { background-color: #4CAF50; color: white; padding: 10px 20px; border: none; cursor: pointer; }
+        button:hover { background-color: #45a049; }
+    </style>
+    <script>
+        // Función para mostrar u ocultar los campos dependiendo del radio seleccionado
+        function toggleFields() {
+            var tipo = document.querySelector('input[name="tipo"]:checked').value;
+            if (tipo === 'general') {
+                document.getElementById('numero_correctores_group').style.display = 'block';
+                document.getElementById('correctores_seleccionados_group').style.display = 'none';
+            } else {
+                document.getElementById('numero_correctores_group').style.display = 'none';
+                document.getElementById('correctores_seleccionados_group').style.display = 'block';
+            }
+        }
+
+        // Llamar a toggleFields cuando la página se carga para establecer el estado inicial
+        window.onload = toggleFields;
+
+        // Cuando se envíe el formulario
+        document.querySelector('form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Evitar que el formulario se envíe de forma tradicional
+
+            // Obtener los datos del formulario
+            const formData = new FormData(event.target);
+
+            // Enviar los datos al servidor utilizando fetch
+            fetch('/abrir_cuestionario', {
+                method: 'POST',
+                body: formData  // Enviar el FormData que incluye los archivos y los campos
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Formulario procesado correctamente:', data);
+            })
+            .catch(error => {
+                console.error('Error al procesar el formulario:', error);
+            });
+        });
+    </script>
+    <script>
+        function cancelar() {
+            event.preventDefault();
+            fetch('/abrir_cuestionario', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json', // Indica que envías datos en formato JSON
+                },
+                body: JSON.stringify({ cancelar : "cancelar" })  // Enviar el FormData que incluye los archivos y los campos
+            })
+            .then(window.location.href = "/correcciones")
+        }
+    </script>
+</head>
+<body>
+
+<div class="container">
+    <h1>Formulario de Corrección</h1>
+    <form method="POST" action="/abrir_cuestionario" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="nombre_correcion">Nombre de la tarea:</label>
+            <input type="text" id="nombre_correcion" name="nombre_correcion" required>
+        </div>
+
+        <!-- Radio buttons para seleccionar el tipo de corrección (General o Privado) -->
+        <div class="form-group">
+            <label>Tipo de corrección:</label><br>
+            <input type="radio" id="general" name="tipo" value="general" onclick="toggleFields()" required> General
+            <input type="radio" id="privado" name="tipo" value="privado" onclick="toggleFields()"> Privado
+        </div>
+
+        <!-- Campo que se muestra cuando se selecciona "General" -->
+        <div class="form-group" id="numero_correctores_group" style="display:none;">
+            <label for="numero_correctores">Número de correctores:</label>
+            <input type="number" id="numero_correctores" name="numero_correctores" min="1">
+        </div>
+
+        <!-- Campo que se muestra cuando se selecciona "Privado" -->
+        <div class="form-group" id="correctores_seleccionados_group" style="display:none;">
+            <label for="correctores_seleccionados">Seleccionar correctores (múltiples):</label>
+            <select multiple id="correctores_seleccionados" name="correctores_seleccionados[]">
+                {% for tutor in correcciones %}
+                    <option value="{{ tutor }}">{{ tutor }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="pdfs">Seleccionar archivos PDF:</label>
+            <input type="file" id="pdfs" name="pdfs" accept=".pdf" multiple>
+        </div>
+
+        <!-- Campo oculto para la ruta JSON -->
+        <input type="hidden" id="ruta_json" name="ruta_json" value="{{ ruta_json }}">
+
+        <button type="submit">Aceptar</button>
+        <button type="button" onclick="cancelar()">Cancelar</button>
+    </form>
+</div>
+
+</body>
+</html>
