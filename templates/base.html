@@ -63,7 +63,7 @@
     <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
     <script>
         // Conectar con el servidor de WebSockets
-        var socket = io.connect('http://' + document.domain + ':' + location.port);
+        var socket = io.connect(window.location.origin);
 
         // Escuchar el evento 'actualizar_pagina' y recargar la página
         socket.on('actualizar_pagina', function() {
